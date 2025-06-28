@@ -1,12 +1,11 @@
 package tn.esprit.demostage.service;
 
-
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.Map;
-
 
 @Service
 public class OpenAiService implements IOpenAiService {
@@ -19,22 +18,22 @@ public class OpenAiService implements IOpenAiService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        String requestJson = """
-                {
-                    "model": "llama3",
-                    "prompt": "%s",
-                    "stream": false
-                }
-                """.formatted(prompt);
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("model", "llama3");
+        requestBody.put("prompt", prompt);
+        requestBody.put("stream", false);
 
-        HttpEntity<String> request = new HttpEntity<>(requestJson, headers);
-        ResponseEntity<Map> response = restTemplate.postForEntity(OLLAMA_URL, request, Map.class);
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(requestBody, headers);
 
-        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            return response.getBody().get("response").toString();
-        } else {
-            return "Erreur lors de l'appel à Ollama.";
+        try {
+            ResponseEntity<Map> response = restTemplate.postForEntity(OLLAMA_URL, request, Map.class);
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null && response.getBody().containsKey("response")) {
+                return response.getBody().get("response").toString();
+            } else {
+                return "Erreur Ollama : réponse inattendue ou vide";
+            }
+        } catch (Exception e) {
+            return "Erreur lors de l'appel à Ollama : " + e.getMessage();
         }
     }
-
 }
