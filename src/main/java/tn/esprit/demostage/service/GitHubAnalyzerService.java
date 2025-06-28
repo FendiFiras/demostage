@@ -18,7 +18,7 @@ public class GitHubAnalyzerService implements IGitHubAnalyzerService {
 
     @Override
     public String analyzeAndSuggest(String githubUrl) throws Exception {
-        String subPath = "CodingFactoryFront/tree/main/src/app/front/CoursesManagementFront/courses-management";
+        String subPath = "demostage/tree/main/src/main/java/tn/esprit/demostage";
         Path tempRepo = Files.createTempDirectory("clonedRepo");
 
         try (Git git = Git.cloneRepository()
@@ -53,6 +53,7 @@ public class GitHubAnalyzerService implements IGitHubAnalyzerService {
             } catch (IOException e) {
                 // Gérer l'erreur de nettoyage si nécessaire
             }
+
         }
     }
 }

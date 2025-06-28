@@ -23,8 +23,8 @@ public class AiCodeReviewController {
         try {
             String response = analyzerService.analyzeAndSuggest(githubUrl);
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        } catch (Exception e) 
+             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erreur : " + e.getMessage());
         }
     }
